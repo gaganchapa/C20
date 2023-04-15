@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Video Player</title>
+  <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
+  <style>
+    .video-playlist {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .video {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .video img {
+      width: 50px;
+      height: 50px;
+    }
+    .video p {
+      margin: 0;
+    }
+    .video h3 {
+      margin: 0;
+    }
+    .video.active {
+      background-color: #ccc;
+    }
+    .main-video {
+      margin-top: 20px;
+    }
+    .main-video video {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="video-playlist">
+  </div>
+
+  <div class="main-video">
+    <h2 class="title"></h2>
+    <video controls></video>
+  </div>
+
+  <script>
+    const main_video = document.querySelector('.main-video video');
+    const main_video_title = document.querySelector('.main-video .title');
+    const video_playlist = document.querySelector('.video-playlist');
+
+    let data = [
+        {
+            'id': 'a1',
+            'title': 'Baby Shark',
+            'name': 'Baby Shark.mp4',
+            'duration': '2:16',
+        },
+        {
+            'id': 'a2',
+            'title': 'MINIONS',
+            'name': 'MINIONS Clip.mp4',
+            'duration': '2:45',
+        },
+        {
+            'id': 'a3',
+            'title': 'Mr Bean',
+            'name': 'Mr Bean.mp4',
+            'duration': '24:49',
+        },
+
+        {
+            'id': 'a4',
+            'title': 'Tom Jerry',
+            'name': 'Tom Jerry.mp4',
+            'duration': '3:59',
+        },
+        {
+            'id': 'a5',
+            'title': 'Wildbrain',
+            'name': 'Wildbrain.mp4',
+            'duration': '4:25',
+        },
+    ];
+
+    data.forEach((video, i) => {
+        let video_element = `
+                    <div class="video" data-id="${video.id}">
+                        <img src="https://img.icons8.com/material-outlined/24/000000/play--v1.png"/>
+                        <p>${i + 1 > 5 ? i + 1 : '0' + (i + 1)}. </p>
+                        <h3 class="title">${video.title}</h3>
+                        <p>${video.duration}</p>
+                    </div>`;
+        video_playlist.insertAdjacentHTML('beforeend', video_element);
+    });
+
+    let current_video = null;
+    const videos = document.querySelectorAll('.video');
+
+    function playVideo(video_element) {
+        const video_id = video_element.dataset.id;
+        const video_title = video_element.querySelector('h3').textContent;
+        const video_duration = video_element.querySelector('p:last-of-type').textContent;
+        const video_src = video_element.querySelector('h3').textContent + '.mp4';
+
+        videos.forEach(video => video.classList.remove('active'));
+        video_element.classList.add('active');
+
+        main_video_title.textContent = video_title;
+        main_video.src = video_src;
+        main_video.play();
+
+        responsiveVoice.speak(`Now playing: ${video_title}`);
+    }
+
+    videos.forEach(video => {
+        video.addEventListener('click', () => {
+            playVideo(video);
+        });
+    });
+  </script>
+
+</body>
+</html>
